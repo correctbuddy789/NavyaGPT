@@ -13,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for a more attractive interface with improved text visibility
+# Custom CSS for a more attractive interface
 st.markdown("""
 <style>
     .main {
@@ -32,12 +32,10 @@ st.markdown("""
     .chat-message.user {
         background-color: #e3f2fd;
         border-left: 5px solid #2196f3;
-        color: #000000;
     }
     .chat-message.bot {
         background-color: #f3f4f6;
         border-left: 5px solid #11567f;
-        color: #000000;
     }
     .chat-message .avatar {
         width: 40px;
@@ -68,22 +66,6 @@ st.markdown("""
         padding: 1rem;
         border-radius: 0.5rem;
         border-left: 5px solid #2196f3;
-        color: #000000;
-    }
-    .footer {
-        text-align: center;
-        margin-top: 20px;
-        font-size: 14px;
-        color: #555555;
-    }
-    .sidebar-content {
-        color: #333333;
-    }
-    .sample-questions {
-        background-color: #f0f2f5;
-        padding: 10px;
-        border-radius: 5px;
-        color: #333333;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -206,10 +188,10 @@ def get_gemini_response(model, prompt, resume_data):
 
 # Sidebar content
 with st.sidebar:
+    st.image("https://www.clipartmax.com/png/small/257-2572603_user-man-avatar-profile-person-icon-user-profile-icon.png", width=100)
     st.title("Navya Choudhari")
     st.subheader("Resume AI Assistant")
     st.markdown("---")
-    st.markdown('<div class="sidebar-content">', unsafe_allow_html=True)
     st.markdown("### About this App")
     st.markdown("""
     This AI-powered assistant helps recruiters explore Navya's resume through natural conversation.
@@ -223,7 +205,6 @@ with st.sidebar:
     """)
     st.markdown("---")
     st.markdown("### Sample Questions")
-    st.markdown('<div class="sample-questions">', unsafe_allow_html=True)
     st.markdown("""
     - What is Navya's educational background?
     - Tell me about her work experience at Zomato
@@ -231,8 +212,6 @@ with st.sidebar:
     - What certifications does she have?
     - What projects has she worked on?
     """)
-    st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
 
 # Main content
 st.title("💬 Navya's Resume AI Assistant")
@@ -248,12 +227,9 @@ model = configure_gemini()
 # Display chat history
 for message in st.session_state.messages:
     with st.container():
-        avatar_img = "https://www.clipartmax.com/png/small/179-1797946_user-icon-gear-svg-png-icon-free-download-profile-icon-png.png" if message['role'] == 'bot' else None
-        avatar_html = f'<img class="avatar" src="{avatar_img}" />' if avatar_img else '<div style="width:40px;"></div>'
-        
         st.markdown(f"""
         <div class="chat-message {message['role']}">
-            {avatar_html}
+            <img class="avatar" src="{'https://www.clipartmax.com/png/small/257-2572603_user-man-avatar-profile-person-icon-user-profile-icon.png' if message['role'] == 'user' else 'https://www.clipartmax.com/png/small/179-1797946_user-icon-gear-svg-png-icon-free-download-profile-icon-png.png'}" />
             <div class="message">{message['content']}</div>
         </div>
         """, unsafe_allow_html=True)
@@ -285,6 +261,4 @@ with col2:
 
 # Footer
 st.markdown("---")
-st.markdown('<div class="footer">', unsafe_allow_html=True)
-st.markdown("Powered by Gemini 1.5 Flash | Created with Streamlit | Coded by Navya", unsafe_allow_html=True)
-st.markdown('</div>', unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: gray;'>Powered by Gemini 2.0 Flash | Created with Streamlit</p>", unsafe_allow_html=True)
