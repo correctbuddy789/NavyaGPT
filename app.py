@@ -1,13 +1,10 @@
+PYTHON
 import streamlit as st
 import google.generativeai as genai
-import pandas as pd
-import os
-from PIL import Image
-import io
 import time
 from datetime import datetime
 
-# Configure page with more professional settings
+# Configure page with professional settings
 st.set_page_config(
     page_title="Navya Choudhari - AI Resume Assistant",
     page_icon="👩‍💼",
@@ -458,4 +455,7 @@ with st.expander("View Full Resume Summary"):
         - Worked with large datasets using Excel and SQL</p>
         
         <h4>🛠️ Technical Skills</h4>
-        <p>Microsoft Suite, R programming, Python, SQL
+        <p>Microsoft Suite, R programming, Python, SQL, Canva, Jamovi</p>
+        
+        <h4>🏆 Achievements</h4>
+        <p>- Winner of Delhi University Business Fest<br
