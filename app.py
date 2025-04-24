@@ -7,52 +7,93 @@ st.set_page_config(
     layout="wide",
 )
 
-# Custom CSS for clean aesthetics with accent
+# Custom CSS for minimalistic bubble chat design
 st.markdown("""
 <style>
-    body, .main {
-        background-color: #fafafa;
-        color: #111;
-        font-family: 'Segoe UI', Tahoma, sans-serif;
-    }
-    .stApp {
-        padding: 2rem;
-    }
-    h1 {
-        color: #0b3d91;
-        font-size: 2.5rem;
-        margin-bottom: 0.5rem;
-    }
-    .description {
-        margin-bottom: 1.5rem;
-        font-size: 1.1rem;
+    /* Clean, minimalistic design */
+    body {
+        background-color: #f7f7f7;
         color: #333;
+        font-family: 'Inter', sans-serif;
     }
-    .stButton>button {
-        background-color: #0b3d91;
-        color: #fff;
-        border-radius: 0.4rem;
+    
+    /* Header styling */
+    h1 {
+        color: #333;
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    
+    /* Chat container */
+    .chat-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+    
+    /* Chat bubbles */
+    .msg {
+        padding: 0.8rem 1.2rem;
+        border-radius: 18px;
+        margin-bottom: 0.8rem;
+        max-width: 80%;
+        word-wrap: break-word;
+        line-height: 1.4;
+    }
+    
+    .user-bubble {
+        background-color: #e1f5fe;
+        color: #01579b;
+        margin-left: auto;
+        border-bottom-right-radius: 4px;
+    }
+    
+    .bot-bubble {
+        background-color: #f1f1f1;
+        color: #333;
+        margin-right: auto;
+        border-bottom-left-radius: 4px;
+    }
+    
+    /* Input area */
+    .stTextInput>div>div>input {
+        border-radius: 20px;
         padding: 0.5rem 1rem;
+        border: 1px solid #ddd;
+    }
+    
+    /* Send button */
+    .stButton>button {
+        border-radius: 20px;
+        background-color: #0084ff;
+        color: white;
+        border: none;
+        padding: 0.5rem 1.2rem;
         font-weight: 500;
     }
+    
     .stButton>button:hover {
-        background-color: #093076;
+        background-color: #0073e6;
     }
-    .chat-box {
-        border: 1px solid #ddd;
-        padding: 1rem;
-        border-radius: 0.5rem;
-        background-color: #fff;
-        max-height: 60vh;
-        overflow-y: auto;
+    
+    /* Hide empty elements */
+    iframe[height="0"] {
+        display: none;
     }
-    .user-msg {
-        text-align: right;
-        margin: 0.5rem 0;
+    
+    /* Footer spacing */
+    footer {
+        visibility: hidden;
     }
-    .bot-msg {
-        text-align: left;
-        margin: 0.5rem 0;
+    
+    /* Clear chat button */
+    .clear-btn {
+        color: #666;
+        font-size: 0.8rem;
+        cursor: pointer;
+        text-align: center;
+        margin-top: 0.5rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -67,7 +108,7 @@ CHRIST (deemed to be University), Bangalore		July 2023 - Present
 B.A. Economics & Psychology
 Relevant Coursework: Microeconomics, Macroeconomics, Econometrics, Statistics, Developmental and Social Psychology
 
-Hopetown Girls’ School							2021 - 2023
+Hopetown Girls' School							2021 - 2023
 
 EXPERIENCE
 Grapevine | Bangalore					 April 2025 - Present
@@ -91,7 +132,7 @@ SEBI Investor Certification Examination	 March 2025
 - Score: 43/50
 
 PROJECTS
-- Taxation & Black Money: I applied game theory (Prisoner’s Dilemma) to analyze tax evasion and demonetization impacts.
+- Taxation & Black Money: I applied game theory (Prisoner's Dilemma) to analyze tax evasion and demonetization impacts.
 - Venture Capital & Gender Disparities: I researched challenges female entrepreneurs face securing VC, identified biases & proposed solutions.
 
 LEADERSHIP & EXTRACURRICULARS
@@ -112,15 +153,26 @@ Hindi (Native), English (Fluent), Nepali (Advanced), French (Intermediate)
 if 'history' not in st.session_state:
     st.session_state.history = []
 
-# Sidebar with brief bio
-with st.sidebar:
-    st.header("About Navya")
-    st.write("I'm Navya Choudhari, a growth intern and financial analyst with a passion for data-driven impact. Ask me about my background!")
-    st.markdown("---")
+# Main UI with centered elements
+st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
+st.title("Navya's Resume Assistant")
 
-# Main UI
-st.title("👩‍💼 Navya's Resume Assistant")
-st.markdown("<div class=\"description\">Chat with me to explore my qualifications, experience, projects, and skills. I’ll answer in first person!</div>", unsafe_allow_html=True)
+# Display chat messages in bubble style
+if st.session_state.history:
+    for msg in st.session_state.history:
+        if msg['role'] == 'user':
+            st.markdown(f"<div class='msg user-bubble'>{msg['content']}</div>", unsafe_allow_html=True)
+        else:
+            st.markdown(f"<div class='msg bot-bubble'>{msg['content']}</div>", unsafe_allow_html=True)
+else:
+    st.markdown("<div class='msg bot-bubble'>Hi there! I'm Navya's resume assistant. Ask me anything about Navya's experience and skills!</div>", unsafe_allow_html=True)
+
+# Input area with send button side by side
+col1, col2 = st.columns([5, 1])
+with col1:
+    query = st.text_input("", placeholder="Type your question here...", label_visibility="collapsed")
+with col2:
+    send = st.button("Send")
 
 # Configure Gemini
 model = genai.GenerativeModel(
@@ -129,31 +181,21 @@ model = genai.GenerativeModel(
     safety_settings=[{"category":"HARM_CATEGORY_HARASSMENT","threshold":"BLOCK_MEDIUM_AND_ABOVE"}]
 )
 
-# Input and chat
-col1, col2 = st.columns([5,1])
-with col1:
-    query = st.text_input("Your question:")
-with col2:
-    send = st.button("Send")
-
+# Process input
 if send and query:
     st.session_state.history.append({"role":"user","content":query})
     # system prompt
-    sys = f"You are Navya Choudharii. Answer as Navya in first person based solely on this resume: {RESUME}"
+    sys = f"You are Navya Choudhari. Answer as Navya in first person based solely on this resume: {RESUME}"
     chat = model.start_chat(history=[])
     chat.send_message(sys)
     resp = chat.send_message(query).text
     st.session_state.history.append({"role":"bot","content":resp})
+    st.experimental_rerun()  # Rerun to update the UI
 
-# Display chat
-st.markdown("<div class='chat-box'>", unsafe_allow_html=True)
-for msg in st.session_state.history:
-    if msg['role']=='user':
-        st.markdown(f"<div class='user-msg'><strong>You:</strong> {msg['content']}</div>", unsafe_allow_html=True)
-    else:
-        st.markdown(f"<div class='bot-msg'><strong>Navya:</strong> {msg['content']}</div>", unsafe_allow_html=True)
+# Clear chat option - minimalist design
+if st.session_state.history:
+    if st.button("Clear Chat", key="clear"):
+        st.session_state.history = []
+        st.experimental_rerun()
+
 st.markdown("</div>", unsafe_allow_html=True)
-
-# Clear chat option
-if st.button("Clear Chat"):
-    st.session_state.history = []
