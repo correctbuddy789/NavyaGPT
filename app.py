@@ -155,7 +155,7 @@ if 'history' not in st.session_state:
 
 # Main UI with centered elements
 st.markdown("<div class='chat-container'>", unsafe_allow_html=True)
-st.title("Navya's Resume Assistant")
+st.title("Talk to Navya 💬")
 
 # Display chat messages in bubble style
 if st.session_state.history:
